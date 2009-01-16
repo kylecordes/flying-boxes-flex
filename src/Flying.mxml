@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute"
+	xmlns:fly="fly.*">
+	<mx:Button x="99" y="62" label="Button" click="populate()"/>
+	<mx:Label id="lab1" x="99" y="124" text="Label"/>
+	
+	<mx:Script>
+	
+		<![CDATA[
+	import fly.RandomData;
+
+private function populate(): void {
+	lab1.text = RandomData.makeName();
+}
+			
+		]]>
+	</mx:Script>
+</mx:Application>

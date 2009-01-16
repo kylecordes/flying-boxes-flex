@@ -7,10 +7,13 @@
 	<mx:Script>
 	
 		<![CDATA[
-	import fly.RandomData;
+import fly.Slots;
 
 private function populate(): void {
-	lab1.text = RandomData.makeName();
+	var slots:Slots = new Slots(this);
+	slots.setupSlots(10, 100);
+	
+	
 }
 			
 		]]>

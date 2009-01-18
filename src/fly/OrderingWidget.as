@@ -1,17 +1,3 @@
-package fly
-{
-	public class OrderingWidget
-	{
-		public function OrderingWidget()
-		{
-		}
-
-	}
-}
-
-
-
-
 /*
  * Sample code from a user group talk:
  * Direct Manipulation with Swing
@@ -22,8 +8,83 @@ package fly
  *
  * Feel free to mine this for ideas and snippets for your own projects.
  */
-package swingtalk.ordering;
 
+package fly
+{
+	import flash.geom.Rectangle;
+	
+	import mx.core.UIComponent;
+	import mx.graphics.IFill;
+	import mx.graphics.IStroke;
+	import mx.graphics.SolidColor;
+
+	
+	[Style(name="fill", type="mx.graphics.IFill", inherit="no")]
+	[Style(name="stroke", type="mx.graphics.IStroke", inherit="no")]
+	public class OrderingWidget extends UIComponent
+	
+	{
+		public function OrderingWidget()
+		{
+		}
+		
+		
+		override protected function createChildren():void
+		{
+			super.createChildren();
+		}
+		
+		override protected function measure():void
+		{
+		}
+		
+		private static var rc:Rectangle = new Rectangle();
+		
+		override protected function updateDisplayList(unscaledWidth:Number,
+												  unscaledHeight:Number):void
+		{
+			var f:IFill = getStyle("fill");
+			var s:IStroke = getStyle("stroke");
+			var o:Number = 0;
+			
+			f = new SolidColor();
+			
+			graphics.clear();
+			
+			if(s != null)
+			{
+				o = s.weight/2;
+				unscaledHeight -=s.weight;
+				unscaledWidth -= s.weight;
+				s.apply(graphics);
+			}
+			else
+				graphics.lineStyle(0,0,0);
+
+			if(f != null)
+			{
+				rc.left = rc.right = o;
+				rc.width = unscaledWidth;
+				rc.height = unscaledHeight;
+				f.begin(graphics,rc);
+			}
+			graphics.drawRect(o,o,unscaledWidth,unscaledHeight);
+			if(f != null)
+			{
+				f.end(graphics);
+			}
+		}
+	
+		override public function invalidateSize():void
+		{
+			super.invalidateSize();
+		}
+
+	}
+}
+
+
+/*
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Point;
@@ -43,10 +104,6 @@ import javax.swing.JLayeredPane;
 import javax.swing.JScrollPane;
 import javax.swing.Timer;
 
-
-/**
- * @author Kyle
- */
 public class OrderingWidget implements MouseListener, MouseMotionListener {  // ActionListener
 
 	private List<WorkOrderPanel> panels = new ArrayList<WorkOrderPanel>();
@@ -207,3 +264,5 @@ public class OrderingWidget implements MouseListener, MouseMotionListener {  // 
 		
 	}
 }
+
+*/

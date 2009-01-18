@@ -21,7 +21,7 @@ import mx.core.UIComponent;
  * This class managers a set of "slots", which are labelled 
  * points on the screen where a widget may belong
  */
-
+ 
 	public class Slots
 	{
 
@@ -50,19 +50,26 @@ import mx.core.UIComponent;
 		private static var LABEL_OFFSET_X:int = -25;
 	
 		//private var samplePanel:UIComponent = new WorkOrderPanel(new WorkOrder(0, "", "", 1));
-		private var samplePanel:UIComponent = new Label();  // needs to have some text in it
+		private var samplePanel:UIComponent = new Tile();
 	
-		private var panelHeight:int = samplePanel.height;
+		private var panelHeight:int;
 	
-		private var panelWidth:int = samplePanel.width;
+		private var panelWidth:int;
 	
-		private var rowSize:int = panelHeight + VER_GAP;
+		private var rowSize:int;
 	
-		private var colSize:int = panelWidth + HOR_GAP;
+		private var colSize:int;
 	
 		private var slotsPerColumn:int = 0;
 	
 		public function setupSlots(numSlots:int, height:int):void {
+			samplePanel.height = 30;
+			
+			panelHeight = samplePanel.height;
+			panelWidth = samplePanel.width;
+			rowSize = panelHeight + VER_GAP;
+			colSize = panelWidth + HOR_GAP;
+			
 			height -= TOP_MARGIN;
 			height -= BOTTOM_MARGIN;
 			var newStackSize:int = height / rowSize;
@@ -135,7 +142,5 @@ import mx.core.UIComponent;
 		public function getPoint(i: int):Point {
 			return points.get(i);
 		}
-	
 	}
-			
 }

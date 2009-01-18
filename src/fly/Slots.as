@@ -18,18 +18,17 @@ import mx.core.Container;
 import mx.core.UIComponent;
 
 /*
- * This class managers a set of "slots", which are labelled 
+ * This class manages a set of "slots", which are labelled 
  * points on the screen where a widget may belong
  */
  
 	public class Slots
 	{
-
 		private var layeredPane:Container;
 		
 		private var points:Array = [];
 	
-		public function Slots(layeredPane:Container) {
+		public function Slots(layeredPane:mx.core.Container) {
 			this.layeredPane = layeredPane;
 		}
 	

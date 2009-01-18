@@ -11,258 +11,119 @@
 
 package fly
 {
-	import flash.geom.Rectangle;
+	import flash.events.Event;
+	import flash.geom.Point;
 	
-	import mx.core.UIComponent;
-	import mx.graphics.IFill;
-	import mx.graphics.IStroke;
-	import mx.graphics.SolidColor;
-
+	import mx.core.Container;
+	import mx.events.ResizeEvent;	
 	
-	[Style(name="fill", type="mx.graphics.IFill", inherit="no")]
-	[Style(name="stroke", type="mx.graphics.IStroke", inherit="no")]
-	public class OrderingWidget extends UIComponent
+	public class OrderingWidget extends mx.core.Container
 	
 	{
 		public function OrderingWidget()
 		{
+			slots = new Slots(this);
+			addEventListener(ResizeEvent.RESIZE, resized);
 		}
-		
-		
-		override protected function createChildren():void
-		{
-			super.createChildren();
-		}
-		
-		override protected function measure():void
-		{
-		}
-		
-		private static var rc:Rectangle = new Rectangle();
 		
 		override protected function updateDisplayList(unscaledWidth:Number,
 												  unscaledHeight:Number):void
 		{
-			var f:IFill = getStyle("fill");
-			var s:IStroke = getStyle("stroke");
-			var o:Number = 0;
-			
-			f = new SolidColor();
-			
-			graphics.clear();
-			
-			if(s != null)
-			{
-				o = s.weight/2;
-				unscaledHeight -=s.weight;
-				unscaledWidth -= s.weight;
-				s.apply(graphics);
-			}
-			else
-				graphics.lineStyle(0,0,0);
-
-			if(f != null)
-			{
-				rc.left = rc.right = o;
-				rc.width = unscaledWidth;
-				rc.height = unscaledHeight;
-				f.begin(graphics,rc);
-			}
-			graphics.drawRect(o,o,unscaledWidth,unscaledHeight);
-			if(f != null)
-			{
-				f.end(graphics);
+			//
+		}
+	
+		private var panels:Array = new Array();  // of tiles
+		private var dragging:Tile;
+		private var grabXoffset:int;
+		private var grabYoffset:int;
+		private var slots:Slots;
+	
+		public function draggedTo(tile:Tile, x:Number, y:Number):void {
+			if (tile != null) {
+				var index:int = slots.findNearestSlotIndex(new Point(tile.x, tile.y));
+	
+				if (index < 0)
+					index = 0;
+				if (index >= panels.size())
+					index = panels.size();
+	
+	            panels.remove(tile);
+	            panels.add(index, tile);
+				startDrifting();
 			}
 		}
 	
-		override public function invalidateSize():void
-		{
-			super.invalidateSize();
-		}
-
-	}
-}
-
-
-/*
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.beans.EventHandler;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.BorderFactory;
-import javax.swing.JComponent;
-import javax.swing.JLayeredPane;
-import javax.swing.JScrollPane;
-import javax.swing.Timer;
-
-public class OrderingWidget implements MouseListener, MouseMotionListener {  // ActionListener
-
-	private List<WorkOrderPanel> panels = new ArrayList<WorkOrderPanel>();
-
-	private WorkOrderPanel dragging;
-
-	private int grabXoffset, grabYoffset;
-
-	private final JLayeredPane layeredPane = new JLayeredPane();
-
-	private final JScrollPane scrollPane = new JScrollPane(layeredPane);
-
-	private final Slots slots = new Slots(layeredPane);
-	
-	private final Timer moveTimer;
-
-	public OrderingWidget() {
-		layeredPane.addMouseListener(this);
-		layeredPane.addMouseMotionListener(this);
-
-		scrollPane.setBorder(BorderFactory.createEmptyBorder());
-		scrollPane.setPreferredSize(new Dimension(500, 400));
-		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-
-		scrollPane.addComponentListener(new ComponentAdapter() {
-			public void componentResized(ComponentEvent e) {
-				resized();
-            }
-        });
-
-        moveTimer = new Timer(25, (ActionListener) EventHandler.create(
-                ActionListener.class, this, "driftPositions"));
-    }
-
-	// **************** Mouse Event Handlers ******************
-	
-	public void mouseEntered(MouseEvent e) {
-	}
-
-	public void mouseExited(MouseEvent e) {
-	}
-
-	public void mouseMoved(MouseEvent e) {
-	}
-
-	public void mousePressed(MouseEvent e) {
-		Component c = layeredPane.getComponentAt(e.getPoint());
-		if (c instanceof WorkOrderPanel) {
-			dragging = (WorkOrderPanel) c;
-			dragging.highlight();
-			layeredPane.setLayer(dragging, 20);
-			grabXoffset = e.getX() - c.getX();
-			grabYoffset = e.getY() - c.getY();
-		}
-	}
-
-	public void mouseReleased(MouseEvent e) {
-		if (dragging != null) {
-			layeredPane.setLayer(dragging, 10);
-			dragging.unHighlight();
-			dragging = null;
-			startDrifting();
-			storeOrder();
-		}
-	}
-
-	public void mouseClicked(MouseEvent e) {
-		if (e.getClickCount() == 2) {
-            // double clicked
-		}
-	}
-
-	public void mouseDragged(MouseEvent e) {
-		if (dragging != null) {
-			Point upperLeftPoint = e.getPoint();
-			upperLeftPoint.translate(-grabXoffset, -grabYoffset);
-			int index = slots.findNearestSlotIndex(upperLeftPoint);
-
-			if (index < 0)
-				index = 0;
-			if (index >= panels.size())
-				index = panels.size();
-
-            panels.remove(dragging);
-            panels.add(index, dragging);
-
-			dragging.setLocation(upperLeftPoint);
-			startDrifting();
-		}
-	}
-
-	private void resized() {
-		if (scrollPane.isVisible()) {
-			int height = scrollPane.getViewport().getHeight();
+		private function resized():void {
 			slots.setupSlots(panels.size(), height);
 			placeWidgets();
 		}
-	}
-
-    public void driftPositions() {
-		int i = 0;
-		boolean anyMoved = false;
-		for (WorkOrderPanel pan : panels) {
-			if (pan != dragging) {
-				Point destination = slots.getPoint(i);
-				int newX = closerCoord(pan.getX(), destination.x);
-				int newY = closerCoord(pan.getY(), destination.y);
-
-				if (newY != pan.getY() || newX != pan.getX()) {
-					pan.setLocation(newX, newY);
-					anyMoved = true;
+	
+	    public function driftPositions():void {
+			var i:int = 0;
+			var anyMoved:Boolean = false;
+			for each (var pan:Tile in panels) {
+				if (pan != dragging) {
+					var destination:Point  = slots.getPoint(i);
+					var newX:int = closerCoord(pan.x, destination.x);
+					var newY:int = closerCoord(pan.y, destination.y);
+	
+					if (newY != pan.y || newX != pan.x) {
+						pan.move(newX, newY);
+						anyMoved = true;
+					}
 				}
+				i++;
 			}
-			i++;
+			if (!anyMoved) {
+				removeEventListener(Event.ENTER_FRAME, driftPositions);
+			}
 		}
-		if (!anyMoved)
-			moveTimer.stop();
-	}
-
-	private static int closerCoord(int current, int target) {
-		float gap = Math.abs(target - current);
-		int increment = (int) Math.ceil(0.1 * gap);
-		if (current > target) {
-			return current - increment;
-		} else {
-			return current + increment;
+	
+		private static function closerCoord(current:int , target:int):int {
+			var gap:int = Math.abs(current - target);
+			var speed:int = Math.ceil(gap * 0.07);
+			if (current > target) {
+				return current - speed;
+			} else {
+				return current + speed;
+			}
 		}
-	}
-
-	public JComponent getComponent() {
-		return scrollPane;
-	}
-
-	private void startDrifting() {
-		moveTimer.start();
-	}
-
-	public void load(List<WorkOrder> workOrders) {
-		panels.clear();
-		for (WorkOrder workOrder : workOrders) {
-			panels.add(new WorkOrderPanel(workOrder));
-		}
-		resized();
-	}
-
-	private void placeWidgets() {
-		int i = 0;
-		for (WorkOrderPanel pan : panels) {
-			layeredPane.add(pan, 10);
-			Point p = slots.getPoint(i);
-			pan.setLocation(p);
-			i++;
-		}
-	}
-
-	private void storeOrder() {
 		
+		private function startDrifting():void {
+			addEventListener(Event.ENTER_FRAME, driftPositions);
+		}
+	
+		public function load(workOrders:Array):void {
+			panels.clear();
+			for each (var s:String in workOrders) {
+				var tile:Tile = new Tile();
+				tile.lab1.text = s;
+				panels.push(tile);
+			}
+			resized();
+		}
+	
+		private function placeWidgets():void {
+			var i:int = 0;
+			for each (var pan:Tile in panels) {
+				addChild(pan);
+				var p:Point = slots.getPoint(i);
+				pan.move(p.x, p.y);
+				i++;
+			}
+		}
+
+		public function startedDragging(tile:Tile):void {
+			// TODO come up to the top
+			dragging = tile;
+		}
+
+		public function doneDragging():void {
+			// TODO sink back down
+			dragging = null;
+			// TODO store the new order of the tiles.
+
+		}
 	}
 }
 
-*/

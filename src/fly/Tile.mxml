@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="152" height="30"
+	mouseDown="down(event)" mouseUp="up(event)" mouseMove="moved(x, y)">
+	<mx:Text  id="lab1" x="23" y="7" text="Here is some text"/>
+	<mx:Script>
+		<![CDATA[
+		
+public var par:OrderingWidget;		
+		
+private function highlight(): void {
+}
+			
+private function unHighlight(): void {
+}
+			
+private function down(event: MouseEvent): void {
+	startDrag();
+	highlight();
+	par.startedDragging(this);
+}
+			
+private function up(event: MouseEvent): void {
+	stopDrag();
+	unHighlight();
+	par.doneDragging();
+}
+			
+private function moved(x:Number, y:Number): void {
+	par.draggedTo(this, x, y);
+}
+
+private function moveNow():void {
+	
+}
+			
+		]]>
+	</mx:Script>	
+</mx:Canvas>

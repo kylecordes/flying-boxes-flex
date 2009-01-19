@@ -62,7 +62,7 @@ import mx.core.UIComponent;
 		private var slotsPerColumn:int = 0;
 	
 		public function setupSlots(numSlots:int, height:int):void {
-			samplePanel.height = 30;
+			//samplePanel.height = 30;
 			
 			panelHeight = samplePanel.height;
 			panelWidth = samplePanel.width;

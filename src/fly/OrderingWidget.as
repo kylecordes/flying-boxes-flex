@@ -76,7 +76,7 @@ package fly
 	
 		private static function closerCoord(current:int , target:int):int {
 			var gap:int = Math.abs(current - target);
-			var speed:int = Math.ceil(gap * 0.07);
+			var speed:int = Math.ceil(gap * 0.3);
 			if (current > target) {
 				return current - speed;
 			} else {
@@ -116,13 +116,13 @@ package fly
 		}
 
 		public function startedDragging(tile:Tile):void {
-			// TODO come up to the top
+			setChildIndex(tile, numChildren-1) // come up to the top of the Z order
 			dragging = tile;
 		}
 
 		public function doneDragging():void {
-			// TODO sink back down
 			dragging = null;
+			startDrifting();
 			// TODO store the new order of the tiles.
 
 		}

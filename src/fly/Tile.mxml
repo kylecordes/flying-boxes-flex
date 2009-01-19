@@ -1,42 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="214" height="30"
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="250" height="58"
 	mouseDown="down(event)" mouseUp="up(event)" mouseMove="moved(x, y)" 
-	creationComplete="populateData(event)" backgroundColor="#53B851">
-	<mx:Text  id="lab1" x="23" y="7" text="Here is some text"/>
+	creationComplete="populateData(event)" backgroundColor="#EBE418" borderColor="#CECFE0" borderThickness="2" color="#EB2828" borderStyle="solid">
+	<mx:Text  id="lab1" x="10" y="10" text="Here is some text"/>
 	<mx:Script>
 		<![CDATA[
+		public var par:OrderingWidget;		
+		public var labelText: String;
+		private var baseColor:String;
 		
-public var par:OrderingWidget;		
-	
-public var labelText: String;
-
-private function highlight(): void {
-}
+		private function highlight(): void {
+			this.setStyle("backgroundColor", "#333333");
 			
-private function unHighlight(): void {
-}
-			
-private function down(event: MouseEvent): void {
-	startDrag();
-	highlight();
-	par.startedDragging(this);
-}
-			
-private function up(event: MouseEvent): void {
-	stopDrag();
-	unHighlight();
-	par.doneDragging();
-}
-			
-private function moved(x:Number, y:Number): void {
-	par.draggedTo(this, x, y);
-	trace(x, y);
-}
-
-private function populateData(event:Event):void {
-	lab1.text = labelText;
-}
-
+		}
+					
+		private function unHighlight(): void {
+			this.setStyle("backgroundColor", baseColor);
+		}
+					
+		private function down(event: MouseEvent): void {
+			startDrag();
+			highlight();
+			par.startedDragging(this);
+		}
+					
+		private function up(event: MouseEvent): void {
+			stopDrag();
+			unHighlight();
+			par.doneDragging();
+		}
+					
+		private function moved(x:Number, y:Number): void {
+			par.draggedTo(this, x, y);
+		}
+		
+		private function populateData(event:Event):void {
+			lab1.text = labelText;
+			var colors:Array = [
+					'#9BC777',
+					'#779BC7',
+					'#406CA1',
+					'#A377C7',
+					'#C7A377'
+					 ];
+			baseColor = colors[Math.floor(Math.random()*5)];
+			unHighlight();
+		}
 		]]>
 	</mx:Script>	
 </mx:Canvas>

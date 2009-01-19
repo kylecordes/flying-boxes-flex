@@ -1,0 +1,6 @@
+
+put in a bitmap (Several of them) for the tiles
+come up with a bit better story around it
+post it on my web site
+Tidy the source a lot
+post the source on my web site

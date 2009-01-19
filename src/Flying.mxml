@@ -1,24 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute"
-	xmlns:fly="fly.*" creationComplete="populate()">
-	<mx:Label id="lab1" x="31" y="10" text="Flying boxes demo"/>
-	<mx:Label id="lab2" x="31" y="36" text="Drag and drop the work orders."/>
-	<fly:OrderingWidget id="orderingWidget" x="31" y="62" height="562" width="706"/>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical"
+	xmlns:fly="fly.*" creationComplete="populate()" paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5" backgroundImage="@Embed(source='backg.jpg')">
 	<mx:Script>
 		<![CDATA[
-import fly.Slots;
-import fly.RandomData;
+			import fly.Slots;
+			import fly.RandomData;
+			import flash.display.StageDisplayState;
 
-private function populate(): void {
-	var wos:Array = new Array();
-	for (var i:int = 0; i < 30; i++) {
-		var product:String = "Delivery for " + RandomData.makeName();
-		var urgency:int = i % 4 + 1;
-		//WorkOrder wo = new WorkOrder(i, RandomData.makeAddress(), product,	urgency);
-		wos.push(product);
-	}
-	orderingWidget.load(wos);
-}
+			private function populate(): void {
+				var wos:Array = new Array();
+				for (var i:int = 0; i < 30; i++) {
+					var product:String = "Delivery for " + RandomData.makeName();
+					var urgency:int = i % 4 + 1;
+					//WorkOrder wo = new WorkOrder(i, RandomData.makeAddress(), product,	urgency);
+					wos.push(product);
+				}
+				orderingWidget.load(wos);
+			}
+
+			private function toggleFullScreen():void {
+				try {
+					switch (Application.application.stage.displayState) {
+						case StageDisplayState.FULL_SCREEN:
+							/* If already in full screen mode, switch to normal mode. */
+							Application.application.stage.displayState = StageDisplayState.NORMAL;
+							break;
+						default:
+							/* If not in full screen mode, switch to full screen mode. */
+							Application.application.stage.displayState = StageDisplayState.FULL_SCREEN;
+							break;
+					}
+				} catch (err:SecurityError) {
+					// ignore
+				}
+			}
+
 		]]>
 	</mx:Script>
+	<mx:VBox x="115" y="104" height="100%" width="100%">
+			<mx:HBox width="100%" horizontalGap="30">
+				<mx:Label id="lab1" text="Oasis Digital Flying boxes demo, now in Flex" color="#CBCFFB" fontSize="12" fontWeight="bold"/>
+				<mx:Button label="Full Screen" width="126" click="toggleFullScreen()"/>
+			</mx:HBox>
+			<mx:Label id="lab2" text="To try it out, drag and drop the boxes around the screen." color="#CBCFFB"/>
+		<fly:OrderingWidget id="orderingWidget" height="100%" width="100%" includeInLayout="true">
+		</fly:OrderingWidget>
+	</mx:VBox>
 </mx:Application>

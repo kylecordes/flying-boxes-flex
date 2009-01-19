@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute"
 	xmlns:fly="fly.*" creationComplete="populate()">
-	<mx:Button x="31" y="77" label="Button" />
 	<mx:Label id="lab1" x="31" y="10" text="Flying boxes demo"/>
 	<mx:Label id="lab2" x="31" y="36" text="Drag and drop the work orders."/>
-	<fly:OrderingWidget id="orderingWidget" x="166" y="77" height="277" width="311"/>
+	<fly:OrderingWidget id="orderingWidget" x="31" y="62" height="562" width="706"/>
 	<mx:Script>
 		<![CDATA[
 import fly.Slots;
@@ -16,7 +15,7 @@ private function populate(): void {
 		var product:String = "Delivery for " + RandomData.makeName();
 		var urgency:int = i % 4 + 1;
 		//WorkOrder wo = new WorkOrder(i, RandomData.makeAddress(), product,	urgency);
-		wos.add(product);
+		wos.push(product);
 	}
 	orderingWidget.load(wos);
 }

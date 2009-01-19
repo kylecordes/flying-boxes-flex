@@ -72,8 +72,7 @@ import mx.core.UIComponent;
 			height -= TOP_MARGIN;
 			height -= BOTTOM_MARGIN;
 			var newStackSize:int = height / rowSize;
-			if (slotsPerColumn == newStackSize)
-				return;
+			//if (slotsPerColumn == newStackSize)	return;
 			
 			slotsPerColumn = newStackSize;
 			
@@ -109,8 +108,6 @@ import mx.core.UIComponent;
 				//lab.setSize(lab.getPreferredSize());
 				lab.x = labelPoint.x;
 				lab.y = labelPoint.y;
-				
-				// lab.setLocation(labelPoint);
 				layeredPane.addChild(lab);
 				// put it on top, on the  LABEL_LAYER);
 			}
@@ -139,7 +136,7 @@ import mx.core.UIComponent;
 		}
 	
 		public function getPoint(i: int):Point {
-			return points.get(i);
+			return points[i];
 		}
 	}
 }

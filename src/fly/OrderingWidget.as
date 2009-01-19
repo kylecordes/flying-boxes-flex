@@ -32,7 +32,7 @@ package fly
 			//
 		}
 	
-		private var panels:Array = new Array();  // of tiles
+		private var tiles:Array = new Array();  // of tiles
 		private var dragging:Tile;
 		private var grabXoffset:int;
 		private var grabYoffset:int;
@@ -44,31 +44,26 @@ package fly
 	
 				if (index < 0)
 					index = 0;
-				if (index >= panels.size())
-					index = panels.size();
+				if (index >= tiles.length)
+					index = tiles.length;
 	
-	            panels.remove(tile);
-	            panels.add(index, tile);
+				tiles.splice(tiles.indexOf(tile), 1)
+				tiles.splice(index, 0, tile);
 				startDrifting();
 			}
 		}
 	
-		private function resized():void {
-			slots.setupSlots(panels.size(), height);
-			placeWidgets();
-		}
-	
-	    public function driftPositions():void {
+	    public function driftPositions(event:Event):void {
 			var i:int = 0;
 			var anyMoved:Boolean = false;
-			for each (var pan:Tile in panels) {
-				if (pan != dragging) {
+			for each (var tile:Tile in tiles) {
+				if (tile != dragging) {
 					var destination:Point  = slots.getPoint(i);
-					var newX:int = closerCoord(pan.x, destination.x);
-					var newY:int = closerCoord(pan.y, destination.y);
+					var newX:int = closerCoord(tile.x, destination.x);
+					var newY:int = closerCoord(tile.y, destination.y);
 	
-					if (newY != pan.y || newX != pan.x) {
-						pan.move(newX, newY);
+					if (newY != tile.y || newX != tile.x) {
+						tile.move(newX, newY);
 						anyMoved = true;
 					}
 				}
@@ -94,21 +89,28 @@ package fly
 		}
 	
 		public function load(workOrders:Array):void {
-			panels.clear();
+			removeAllChildren();
+			tiles = new Array();
 			for each (var s:String in workOrders) {
 				var tile:Tile = new Tile();
-				tile.lab1.text = s;
-				panels.push(tile);
+				tile.par = this;
+				tile.labelText = s;
+				tiles.push(tile);
 			}
-			resized();
+			resized(null);
+		}
+	
+		private function resized(re:ResizeEvent):void {
+			slots.setupSlots(tiles.length, height);
+			placeWidgets();
 		}
 	
 		private function placeWidgets():void {
 			var i:int = 0;
-			for each (var pan:Tile in panels) {
-				addChild(pan);
+			for each (var tile:Tile in tiles) {
+				addChild(tile);
 				var p:Point = slots.getPoint(i);
-				pan.move(p.x, p.y);
+				tile.move(p.x, p.y);
 				i++;
 			}
 		}

@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="152" height="30"
-	mouseDown="down(event)" mouseUp="up(event)" mouseMove="moved(x, y)">
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="214" height="30"
+	mouseDown="down(event)" mouseUp="up(event)" mouseMove="moved(x, y)" 
+	creationComplete="populateData(event)" backgroundColor="#53B851">
 	<mx:Text  id="lab1" x="23" y="7" text="Here is some text"/>
 	<mx:Script>
 		<![CDATA[
 		
 public var par:OrderingWidget;		
-		
+	
+public var labelText: String;
+
 private function highlight(): void {
 }
 			
@@ -27,12 +30,13 @@ private function up(event: MouseEvent): void {
 			
 private function moved(x:Number, y:Number): void {
 	par.draggedTo(this, x, y);
+	trace(x, y);
 }
 
-private function moveNow():void {
-	
+private function populateData(event:Event):void {
+	lab1.text = labelText;
 }
-			
+
 		]]>
 	</mx:Script>	
 </mx:Canvas>

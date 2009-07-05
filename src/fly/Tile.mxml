@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="250" height="58"
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="164" height="58"
 	mouseDown="down(event)" mouseUp="up(event)" mouseMove="moved(x, y)" 
-	creationComplete="populateData(event)" backgroundColor="#EBE418" borderColor="#CECFE0" borderThickness="2" color="#EB2828" borderStyle="solid">
-	<mx:Text  id="lab1" x="10" y="10" text="Here is some text"/>
+	creationComplete="populateData(event)" backgroundColor="#EBE418" borderColor="#CECFE0" borderThickness="2" color="#EB2828" borderStyle="solid" horizontalScrollPolicy="off">
+	<mx:Text  id="lab1" x="3" y="18" text="Here is some text" color="white"/>
 	<mx:Script>
 		<![CDATA[
 		public var par:OrderingWidget;		
@@ -11,7 +11,6 @@
 		
 		private function highlight(): void {
 			this.setStyle("backgroundColor", "#333333");
-			
 		}
 					
 		private function unHighlight(): void {
@@ -37,13 +36,12 @@
 		private function populateData(event:Event):void {
 			lab1.text = labelText;
 			var colors:Array = [
-					'#9BC777',
-					'#779BC7',
-					'#406CA1',
-					'#A377C7',
-					'#C7A377'
+					'#CC6633',
+					'#CCB333',
+					'#99CC33',
+					'#4DCC33'
 					 ];
-			baseColor = colors[Math.floor(Math.random()*5)];
+			baseColor = colors[Math.floor(Math.random()*4)];
 			unHighlight();
 		}
 		]]>

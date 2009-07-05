@@ -95,6 +95,7 @@ package fly
 				var tile:Tile = new Tile();
 				tile.par = this;
 				tile.labelText = s;
+				tile.cacheAsBitmap = true;
 				tiles.push(tile);
 			}
 			resized(null);

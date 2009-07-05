@@ -3,16 +3,15 @@
 	xmlns:fly="fly.*" creationComplete="populate()" paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5" backgroundImage="@Embed(source='backg.jpg')">
 	<mx:Script>
 		<![CDATA[
+			import flash.net.navigateToURL;
 			import fly.Slots;
 			import fly.RandomData;
 			import flash.display.StageDisplayState;
 
 			private function populate(): void {
 				var wos:Array = new Array();
-				for (var i:int = 0; i < 30; i++) {
+				for (var i:int = 0; i < 24; i++) {
 					var product:String = "Delivery for " + RandomData.makeName();
-					var urgency:int = i % 4 + 1;
-					//WorkOrder wo = new WorkOrder(i, RandomData.makeAddress(), product,	urgency);
 					wos.push(product);
 				}
 				orderingWidget.load(wos);
@@ -22,17 +21,20 @@
 				try {
 					switch (Application.application.stage.displayState) {
 						case StageDisplayState.FULL_SCREEN:
-							/* If already in full screen mode, switch to normal mode. */
 							Application.application.stage.displayState = StageDisplayState.NORMAL;
 							break;
 						default:
-							/* If not in full screen mode, switch to full screen mode. */
 							Application.application.stage.displayState = StageDisplayState.FULL_SCREEN;
 							break;
 					}
 				} catch (err:SecurityError) {
-					// ignore
+					// if we can't go full screen, don't bother user with an error
 				}
+			}
+			
+			private function linkClicked(e: MouseEvent):void {
+				var u:URLRequest = new URLRequest("http://www.flickr.com/photos/joyofseth/503098762/sizes/l/");
+				navigateToURL(u);
 			}
 
 		]]>
@@ -41,6 +43,7 @@
 			<mx:HBox width="100%" horizontalGap="30">
 				<mx:Label id="lab1" text="Oasis Digital Flying boxes demo, now in Flex" color="#CBCFFB" fontSize="12" fontWeight="bold"/>
 				<mx:Button label="Full Screen" width="126" click="toggleFullScreen()"/>
+				<mx:LinkButton label="(image credit)" click="linkClicked(event)"/>
 			</mx:HBox>
 			<mx:Label id="lab2" text="To try it out, drag and drop the boxes around the screen." color="#CBCFFB"/>
 		<fly:OrderingWidget id="orderingWidget" height="100%" width="100%" includeInLayout="true">
